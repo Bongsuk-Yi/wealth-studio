@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "start": "npm run build && npx --yes serve dist -l 5173"
+    "start": "npx --yes serve dist -l 5173"
   },
   "dependencies": {
     "chart.js": "4.4.1",

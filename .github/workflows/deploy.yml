@@ -25,6 +25,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          SITE_PASSWORD: ${{ secrets.SITE_PASSWORD }}
       - uses: actions/configure-pages@v5
         with:
           enablement: true

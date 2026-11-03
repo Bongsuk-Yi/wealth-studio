@@ -13,3 +13,9 @@ npm start       # 로컬 미리보기 http://localhost:5173
 ```
 `main`에 push하면 GitHub Actions(`.github/workflows/deploy.yml`)가 빌드해 GitHub Pages로 배포합니다.
 (저장소 Settings → Pages → Source를 **GitHub Actions**로 두면 됩니다.)
+
+## 비밀번호 보호
+모든 HTML은 빌드 때 AES-256-GCM으로 암호화되고(키: PBKDF2-SHA256 310,000회), 브라우저에서 비밀번호로 복호화됩니다.
+비밀번호는 저장소에 넣지 않고 **Settings → Secrets and variables → Actions → `SITE_PASSWORD`** 에만 둡니다.
+비밀번호를 바꾸려면 이 Secret 값을 바꾸고 Actions에서 워크플로를 다시 실행하세요.
+로컬 빌드: `SITE_PASSWORD=... npm run build`
