@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>자산형성 스튜디오 | 몬테카를로 자산 계산기 · 노후 자금 시뮬레이터</title>
+  <meta name="description" content="자산·수입·지출을 입력하면 10년·30년 뒤 예상 순자산과 자산 구성을 계산하고, 몬테카를로 시뮬레이션으로 목표 달성 확률까지 보여 주는 무료 자산형성 계산기. A4 보고서 PDF 저장 지원." />
+  <meta name="theme-color" content="#0B0E11" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="자산형성 스튜디오" />
+  <meta property="og:locale" content="ko_KR" />
+  <meta property="og:title" content="자산형성 스튜디오 | 몬테카를로 자산 계산기" />
+  <meta property="og:description" content="10년·30년 뒤 내 순자산은 얼마일까? 몬테카를로 시뮬레이션으로 목표 달성 확률을 확인하세요." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="logo" href="#intro" data-go="intro"><span class="logo-mark"></span>자산형성 스튜디오</a>
+    <nav class="nav" aria-label="창 전환">
+      <button data-go="intro" class="on"><b>01</b>소개</button>
+      <button data-go="input"><b>02</b>입력</button>
+      <button data-go="output"><b>03</b>출력</button>
+      <button data-go="mc"><b>04</b>몬테카를로</button>
+      <button data-go="advice"><b>05</b>조언</button>
+      <a class="nav-link" href="guides/">재무 가이드</a>
+    </nav>
+    <div class="plan-chip" id="planChip" title="현재 계획"><span class="dot"></span><span id="planChipText">예시 계획</span></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- 01 소개 -->
+  <section class="view on" id="v-intro">
+    <div class="hero">
+      <div class="hero-text">
+        <span class="eyebrow">WEALTH PLANNER</span>
+        <h1 class="hero-title">내 자산이 <em>10년 뒤</em><br />얼마가 될지, 숫자로 확인하세요</h1>
+        <p class="hero-sub">자산·수입·지출을 입력하면 원하는 기간(최대 100년)의 자산 추이를 계산하고, 수천 번의 몬테카를로 시뮬레이션으로 불확실성까지 보여 줍니다. 결과는 A4로 인쇄하거나 PDF로 저장할 수 있고, 조언 창에서 다음 행동을 안내받을 수 있습니다.</p>
+        <div class="row">
+          <button class="btn primary lg" data-go="input">시작하기 →</button>
+          <button class="btn lg" id="introExample">예시로 둘러보기</button>
+        </div>
+      </div>
+      <div class="hero-card" id="introSnap"></div>
+    </div>
+
+    <h2 class="sec-title">이렇게 사용하세요</h2>
+    <div class="steps">
+      <button class="step" data-go="input"><span class="step-n">02</span><h3>입력</h3><p>자산(부동산·현금·주식·ETF·채권·연금)과 연간 수입·지출을 항목별로 입력하고 계획을 저장합니다. 엑셀·JSON 불러오기 지원.</p></button>
+      <button class="step" data-go="output"><span class="step-n">03</span><h3>출력</h3><p>조회 기간별 예상 총자산·순자산, 자산 구성표와 5종 그래프. A4 인쇄 · PDF · PNG 저장.</p></button>
+      <button class="step" data-go="mc"><span class="step-n">04</span><h3>몬테카를로 분석</h3><p>수익률 변동성과 세금을 반영해 최대 1만 번 시뮬레이션. 비관·중앙·낙관 범위와 목표 달성 확률.</p></button>
+      <button class="step" data-go="advice"><span class="step-n">05</span><h3>조언</h3><p>입력값과 시뮬레이션 결과로 비상금·저축률·자산배분·노후·절세 조언을 제공합니다.</p></button>
+    </div>
+    <div class="panel notice"><b>계산 기준</b>연복리 · 명목 금액(물가 미반영) · 수수료 미반영 · 몬테카를로는 정규분포 가정. 결과와 조언은 일반적인 재무 정보이며 투자 권유나 공인 자문이 아닙니다. 입력한 데이터는 이 브라우저에만 저장됩니다.</div>
+
+    <h2 class="sec-title">계산 전에 읽어 보면 좋은 가이드</h2>
+    <div class="guide-grid">
+      <a class="guide-card" href="guides/monte-carlo.html"><h3>몬테카를로 시뮬레이션으로 보는 자산 계획</h3><p>평균 수익률 계산이 빗나가는 이유와 비관·중앙·낙관 범위 읽는 법</p><span>가이드 읽기 →</span></a>
+      <a class="guide-card" href="guides/retirement-planning.html"><h3>노후 자금 계산법과 4% 인출 규칙</h3><p>은퇴 후 생활비에서 필요한 노후 자산을 거꾸로 계산하는 방법</p><span>가이드 읽기 →</span></a>
+      <a class="guide-card" href="guides/tax-saving-accounts.html"><h3>연금저축·IRP·ISA 절세 계좌 비교</h3><p>세액공제와 비과세 혜택, 납입 한도, 채우는 순서</p><span>가이드 읽기 →</span></a>
+    </div>
+    <p><a class="link-more" href="guides/">재무 가이드 전체 보기 →</a></p>
+
+    <h2 class="sec-title">자주 묻는 질문</h2>
+    <div class="faq">
+      <details><summary>입력한 자산 정보는 어디에 저장되나요?</summary><p>사용 중인 브라우저의 로컬 저장소에만 저장되며 서버로 전송되지 않습니다. 브라우저 데이터를 지우면 함께 삭제되므로 중요한 계획은 입력 화면의 ‘계획을 .json으로 내보내기’로 보관하세요.</p></details>
+      <details><summary>몬테카를로 시뮬레이션은 무엇을 알려 주나요?</summary><p>매년 수익률이 무작위로 달라지는 상황을 수천 번 계산해 비관(하위 10%), 중앙값, 낙관(상위 10%) 결과와 목표 금액 달성 확률을 보여 줍니다. 자세한 원리는 <a href="guides/monte-carlo.html">몬테카를로 가이드</a>에서 설명합니다.</p></details>
+      <details><summary>계산 결과에 세금과 물가상승이 반영되나요?</summary><p>기본 계산은 세금·수수료·물가상승을 반영하지 않은 명목 금액입니다. 몬테카를로 분석에서 ‘세후로 계산’을 켜면 자산별 세율을 적용한 세후 결과를 볼 수 있습니다.</p></details>
+      <details><summary>결과를 인쇄하거나 파일로 저장할 수 있나요?</summary><p>출력 화면의 A4 미리보기에서 보고서를 인쇄하거나 PDF·PNG 파일로 내려받을 수 있습니다. 몬테카를로 결과와 조언 페이지 포함 여부도 고를 수 있습니다.</p></details>
+    </div>
+  </section>
+
+  <!-- 02 입력 -->
+  <section class="view" id="v-input">
+    <div class="view-head">
+      <div><h2 class="view-title">입력</h2><p class="sub">입력값은 즉시 출력·몬테카를로·조언에 반영됩니다. 금액 단위: 원</p></div>
+      <span class="tag-example" id="exampleTag" hidden>예시 값</span>
+    </div>
+    <section class="panel planbar">
+      <div class="pb-row">
+        <label class="pb-l" for="planSel">내 계획</label>
+        <select id="planSel"></select>
+        <span class="dirty" id="dirty" hidden>저장 안 된 변경</span>
+        <div class="pb-btns">
+          <button class="btn" id="btnNew">새로 만들기</button>
+          <button class="btn primary" id="btnSave">저장</button>
+          <button class="btn" id="btnSaveAs">다른 이름으로 저장</button>
+          <button class="btn danger" id="btnDel">삭제</button>
+        </div>
+      </div>
+      <form class="pb-form" id="nameForm" hidden>
+        <label for="nameIn" id="nameLabel">새 계획 이름</label>
+        <input id="nameIn" maxlength="40" placeholder="예: 우리집 2026 계획" required />
+        <label class="chk" id="blankWrap"><input type="checkbox" id="startBlank" checked /> 빈 양식으로 시작</label>
+        <button class="btn primary" type="submit" id="nameOk">만들기</button>
+        <button class="btn" type="button" id="nameCancel">취소</button>
+      </form>
+      <div class="pb-form" id="confirmBar" hidden>
+        <span id="confirmText"></span>
+        <button class="btn danger" type="button" id="confirmYes">확인</button>
+        <button class="btn" type="button" id="confirmNo">취소</button>
+      </div>
+      <p class="hint" id="planHint"></p>
+    </section>
+    <div class="input-layout">
+      <div class="panel editor">
+        <div class="ph">
+          <div class="tabs" role="tablist">
+            <button role="tab" data-tab="basic" aria-selected="true">기본</button>
+            <button role="tab" data-tab="asset" aria-selected="false">자산</button>
+            <button role="tab" data-tab="inc" aria-selected="false">수입</button>
+            <button role="tab" data-tab="exp" aria-selected="false">지출</button>
+          </div>
+        </div>
+        <div class="pb" id="inputBody"></div>
+        <div class="pf">
+          <label class="drop" id="drop" for="fileIn">엑셀(.xlsx ‘입력’ 시트) 또는 저장한 계획(.json)을 끌어다 놓거나 눌러서 불러오기
+            <input type="file" id="fileIn" accept=".xlsx,.xls,.json" hidden />
+          </label>
+          <button class="btn" id="btnTemplate">엑셀 양식 내려받기</button>
+          <button class="btn" id="btnExportJson">계획을 .json으로 내보내기</button>
+        </div>
+      </div>
+      <aside class="panel live">
+        <h2>실시간 요약</h2>
+        <div id="liveKpis" class="live-kpis"></div>
+        <div class="cbox sm"><canvas id="chLive"></canvas></div>
+        <button class="btn primary full" data-go="output">출력 보기 →</button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 03 출력 -->
+  <section class="view" id="v-output">
+    <div class="view-head">
+      <div><h2 class="view-title">출력</h2><p class="sub" id="outSub"></p></div>
+      <div class="row"><button class="btn primary" id="btnA4">A4 미리보기 · 인쇄 · 다운로드</button></div>
+    </div>
+    <div class="yearbox">
+      <span>조회 기간</span>
+      <input type="range" id="yearRange" min="1" max="30" value="10" aria-label="조회 기간(년)" />
+      <strong id="yearLabel">10년 후</strong>
+      <span class="note" id="targetYear"></span>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <section class="sec">
+      <h2>자산 구성별 결과</h2>
+      <div class="tw"><table id="resTable"></table></div>
+      <p class="note mt8">순자산 = 총자산 + 누적 수입 − 누적 지출. 수입·지출은 시작 연차부터 발생해 매년 증감률만큼 바뀌고, 기간 연차가 지나면 0원입니다.</p>
+    </section>
+    <div class="charts">
+      <section class="sec">
+        <h2><span>항목별 추이 (0~<span class="hz">30</span>년)</span><select id="pick" aria-label="그래프로 볼 항목"></select></h2>
+        <p class="note" id="pickNote"></p>
+        <div class="cbox"><canvas id="chPick"></canvas></div>
+      </section>
+      <section class="sec">
+        <h2><span>총자산 · 수입 · 지출 · 순자산</span></h2>
+        <p class="note">&nbsp;</p>
+        <div class="cbox"><canvas id="chFlow"></canvas></div>
+      </section>
+      <section class="sec"><h2>자산 구분별 누적 추이</h2><div class="cbox"><canvas id="chArea"></canvas></div></section>
+      <section class="sec"><h2 id="barTitle">현재 vs 선택 연도</h2><div class="cbox"><canvas id="chBar"></canvas></div></section>
+    </div>
+    <section class="sec pie"><h2 id="pieTitle">선택 연도 자산 구성비</h2><div class="cbox"><canvas id="chPie"></canvas></div></section>
+  </section>
+
+  <!-- 04 몬테카를로 -->
+  <section class="view" id="v-mc">
+    <div class="view-head">
+      <div><h2 class="view-title">몬테카를로 분석</h2><p class="sub">매년 수익률을 무작위로 바꿔 수천 번 계산합니다. 각 자산의 예상 연수익률을 평균으로, 변동성을 표준편차로 씁니다.</p></div>
+      <div class="row"><button class="btn primary lg" id="mcRun">시뮬레이션 실행</button></div>
+    </div>
+    <div class="mc-layout">
+      <aside class="panel mc-settings">
+        <h2>설정</h2>
+        <div class="mc-set">
+          <label class="mini">시뮬레이션 횟수<select id="mcRuns"><option value="1000">1,000회</option><option value="5000" selected>5,000회</option><option value="10000">10,000회</option></select></label>
+          <label class="mini">목표 순자산(원)<input id="mcTarget" class="amt" inputmode="numeric" /></label>
+        </div>
+        <h3 class="mini-h">자산별 변동성(연 표준편차)</h3>
+        <div class="mc-set" id="volGrid"></div>
+        <h3 class="mini-h"><label class="chk"><input type="checkbox" id="taxOn" checked /> 세후로 계산</label></h3>
+        <p class="hint">수익이 난 해에 그 수익에만 세율을 적용합니다(손실 해에는 세금 없음). 수입 세율은 수입을 세전으로 입력한 경우에만 고르세요.</p>
+        <div class="mc-set" id="taxGrid"></div>
+      </aside>
+      <div class="mc-main">
+        <p class="mc-status" id="mcStatus">아직 실행한 결과가 없습니다. ‘시뮬레이션 실행’을 누르세요.</p>
+        <div id="mcOut" hidden>
+          <div class="kpis" id="mcKpis"></div>
+          <div class="charts mt14">
+            <section class="sec"><h2><span>순자산 범위 (0~<span class="hz">30</span>년)</span></h2><div class="cbox"><canvas id="chMC"></canvas></div></section>
+            <section class="sec"><h2 id="mcHistT">순자산 분포</h2><div class="cbox"><canvas id="chMCHist"></canvas></div><div class="legend-key" id="mcHistKey"></div></section>
+          </div>
+          <section class="sec mt14"><h2>시점별 결과</h2><div class="tw"><table id="mcTable"></table></div></section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 조언 -->
+  <section class="view" id="v-advice">
+    <div class="view-head">
+      <div><h2 class="view-title">조언</h2><p class="sub">입력값과 몬테카를로 결과를 바탕으로 자산형성에 필요한 조언을 드립니다.</p></div>
+    </div>
+    <div class="advice-layout">
+      <div class="panel chat">
+        <div class="chat-log" id="chatLog"></div>
+        <div class="chips" id="chips"></div>
+        <form class="chat-input" id="chatForm">
+          <input id="chatText" placeholder="예: 비상금은 얼마나 있어야 하나요?" autocomplete="off" />
+          <button class="btn primary" type="submit">보내기</button>
+        </form>
+      </div>
+      <aside class="panel health" id="health"></aside>
+    </div>
+  </section>
+</div>
+
+<noscript><p class="wrap">이 계산기는 자바스크립트로 동작합니다. 브라우저에서 자바스크립트를 켜 주세요. <a href="guides/">재무 가이드</a>는 자바스크립트 없이도 읽을 수 있습니다.</p></noscript>
+
+<footer class="site-footer">
+  <div class="footer-in">
+    <div class="footer-brand"><span class="logo-mark"></span><b>자산형성 스튜디오</b><p>자산·수입·지출로 원하는 기간의 자산 추이와 몬테카를로 시뮬레이션을 계산하는 무료 자산 계획 도구</p></div>
+    <nav class="footer-links" aria-label="사이트 정보">
+      <div><h4>도구</h4><a href="./#input">자산 계산기</a><a href="./#mc">몬테카를로 분석</a><a href="./#advice">자산 조언</a></div>
+      <div><h4>재무 가이드</h4><a href="guides/">전체 가이드</a><a href="guides/emergency-fund.html">비상금</a><a href="guides/tax-saving-accounts.html">절세 계좌</a><a href="guides/retirement-planning.html">노후 자금</a></div>
+      <div><h4>사이트</h4><a href="about.html">서비스 소개</a><a href="privacy.html">개인정보처리방침</a><a href="terms.html">이용약관</a></div>
+    </nav>
+  </div>
+  <p class="footer-note">이 사이트의 계산 결과와 글은 일반적인 재무 정보이며 투자 권유나 개인 맞춤 투자자문이 아닙니다. © 2026 자산형성 스튜디오</p>
+</footer>
+
+<div class="overlay" id="a4Overlay" hidden>
+  <div class="overlay-bar">
+    <strong>A4 미리보기</strong>
+    <div class="seg" id="orient"><button class="on" data-o="portrait">세로</button><button data-o="landscape">가로</button></div>
+    <label class="chk"><input type="checkbox" id="incMC" checked /> 몬테카를로 포함</label>
+    <label class="chk"><input type="checkbox" id="incAdvice" checked /> 조언 포함</label>
+    <span class="grow"></span>
+    <button class="btn" id="btnPrint">인쇄</button>
+    <button class="btn" id="btnPng">PNG</button>
+    <button class="btn primary" id="btnPdf">PDF 다운로드</button>
+    <button class="btn" id="btnCloseA4">닫기</button>
+  </div>
+  <div class="a4-stage" id="a4Stage"></div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="vendor/chart.umd.js"></script>
+<script src="vendor/xlsx.full.min.js" defer></script>
+<script src="vendor/html2canvas.min.js" defer></script>
+<script src="vendor/jspdf.umd.min.js" defer></script>
+<script src="app.js" defer></script>
+</body>
+</html>

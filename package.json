@@ -1,0 +1,17 @@
+{
+  "name": "wealth-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "자산형성 스튜디오 — 몬테카를로 자산 계산기 (GitHub Pages)",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "start": "npm run build && npx --yes serve dist -l 5173"
+  },
+  "dependencies": {
+    "chart.js": "4.4.1",
+    "html2canvas": "1.4.1",
+    "jspdf": "2.5.1",
+    "xlsx": "0.18.5"
+  }
+}
