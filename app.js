@@ -1,4 +1,4 @@
-/* 자산형성 스튜디오 — 소개 · 입력 · 출력 · 몬테카를로 · 조언 · A4 보고서
+/* 돈불리기 — 소개 · 입력 · 출력 · 몬테카를로 · 조언 · A4 보고서
    모든 계산은 브라우저 안에서만 이루어지고, 데이터는 localStorage에만 저장됩니다. */
 (() => {
 'use strict';
@@ -460,7 +460,7 @@ $('#btnTemplate').addEventListener('click', () => {
   const ws = XLSX.utils.aoa_to_sheet(rows); ws['!cols'] = [{ wch: 6 }, { wch: 8 }, { wch: 18 }, { wch: 16 }, { wch: 16 }, { wch: 10 }, { wch: 10 }];
   const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, '입력');
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([['작성 방법'], ['구분: 기본·자산·수입·지출 중 하나'], ['자산의 분류: 부동산·현금·주식·ETF·채권·연금'], ['금액은 원 단위, 수입·지출은 연간 금액'], ['수익률·증감률은 % 숫자 (예: 3 = 3%)']]), '설명');
-  XLSX.writeFile(wb, `자산형성_입력양식.xlsx`);
+  XLSX.writeFile(wb, `돈불리기_입력양식.xlsx`);
 });
 async function importFile(f) {
   if (!f) return;
@@ -846,12 +846,12 @@ function chartImg(fn, w = 680, h = 300) {
   box.remove(); return url;
 }
 function a4Page(inner, n, total) {
-  return `<div class="a4${orient === 'landscape' ? ' land' : ''}">${inner}<div class="a4-foot">자산형성 스튜디오 · ${esc(planName())} · ${todayKo()} · ${n}/${total} — 계산 결과는 일반적인 재무 정보이며 투자 권유가 아닙니다.</div></div>`;
+  return `<div class="a4${orient === 'landscape' ? ' land' : ''}">${inner}<div class="a4-foot">돈불리기 · ${esc(planName())} · ${todayKo()} · ${n}/${total} — 계산 결과는 일반적인 재무 정보이며 투자 권유가 아닙니다.</div></div>`;
 }
 function buildA4() {
   const P = project(), N = S.years, pages = [];
   const head = (t) => `<div class="a4-head"><div><h1>${t}</h1></div><span>${esc(planName())} · ${todayKo()}</span></div>`;
-  pages.push(`${head('자산형성 보고서')}
+  pages.push(`${head('돈불리기 보고서')}
     <p class="note">현재 ${S.age}세 · 은퇴 목표 ${S.retireAge}세 · 조회 기간 ${N}년 후(${new Date().getFullYear() + N}년) · 계산 기간 ${H}년 · 연복리 명목 금액</p>
     <h2>핵심 지표</h2><div class="kpis">${kpiHTML(P, N)}</div>
     <h2>자산 구성별 결과</h2><table>${tableHTML(P, N, true)}</table>`);
@@ -899,13 +899,13 @@ $('#btnPdf').addEventListener('click', (e) => busy(e.currentTarget, async () => 
   const cs = await capturePages(), pdf = new window.jspdf.jsPDF({ orientation: orient, unit: 'mm', format: 'a4' });
   const W = orient === 'portrait' ? 210 : 297, Hh = orient === 'portrait' ? 297 : 210;
   cs.forEach((c, i) => { if (i) pdf.addPage('a4', orient); const h = Math.min(Hh, (c.height / c.width) * W); pdf.addImage(c.toDataURL('image/jpeg', .92), 'JPEG', 0, 0, W, h); });
-  pdf.save(`${safeName()}_자산형성보고서.pdf`);
+  pdf.save(`${safeName()}_돈불리기보고서.pdf`);
 }));
 $('#btnPng').addEventListener('click', (e) => busy(e.currentTarget, async () => {
   const cs = await capturePages(), gap = 24, w = Math.max(...cs.map((c) => c.width)), h = cs.reduce((s, c) => s + c.height, 0) + gap * (cs.length - 1);
   const out = document.createElement('canvas'); out.width = w; out.height = h; const g = out.getContext('2d'); g.fillStyle = '#e9ecef'; g.fillRect(0, 0, w, h);
   let y = 0; for (const c of cs) { g.drawImage(c, 0, y); y += c.height + gap; }
-  out.toBlob((b) => download(`${safeName()}_자산형성보고서.png`, b), 'image/png');
+  out.toBlob((b) => download(`${safeName()}_돈불리기보고서.png`, b), 'image/png');
 }));
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('#a4Overlay').hidden) $('#a4Overlay').hidden = true; });
 

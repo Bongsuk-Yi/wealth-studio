@@ -37,7 +37,7 @@ let n = 0;
 for (const f of walk(dist).filter((p) => p.endsWith('.html'))) {
   let html = readFileSync(f, 'utf8');
   html = html.replace('<head>', '<head>\n<meta name="robots" content="noindex, nofollow, noarchive">').replace(/<\/body>/i, LOCK_SNIPPET(STORE_KEY) + '\n</body>');
-  const title = (html.match(/<title>([^<]*)<\/title>/) || [, '자산형성 스튜디오'])[1].split('|')[0].trim();
+  const title = (html.match(/<title>([^<]*)<\/title>/) || [, '돈불리기'])[1].split('|')[0].trim();
   writeFileSync(f, gatePage({ title, mark: '📈', storeKey: STORE_KEY, envelope: encrypt(html, pw), theme: 'dark' }));
   n++;
 }
